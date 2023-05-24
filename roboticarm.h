@@ -7,8 +7,6 @@
 #include "mygraphicsview.h"
 #include "game.h"
 #include "game2.h"
-#include "video.h"
-#include "camera.h"
 #include "drawgame.h"
 
 
@@ -32,7 +30,6 @@ public:
     MyGraphicsView* scene;
     MyGraphicsView *draw;
     DrawGame* drawingGame;
-    void initCam();
 
 public slots:
     void printError(int e);
@@ -56,7 +53,6 @@ private:
     Ui::RoboticArm *ui;
     MyGraphicsView* pitch;
     QTimer *timer;
-    Camera *cam;
     int dice_b, dice_drawGame;
     QString defaultPath, path;
 };

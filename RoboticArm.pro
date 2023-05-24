@@ -25,9 +25,7 @@ SOURCES += main.cpp\
     senddata.cpp \
     mygraphicsview.cpp \
     game.cpp \
-    video.cpp \
     game2.cpp \
-    camera.cpp \
     drawarea.cpp \
     drawgame.cpp
 
@@ -36,9 +34,7 @@ HEADERS  += \
     senddata.h \
     mygraphicsview.h \
     game.h \
-    video.h \
     game2.h \
-    camera.h \
     drawarea.h \
     drawgame.h
 

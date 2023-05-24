@@ -128,16 +128,6 @@ RoboticArm::RoboticArm(QWidget *parent) :
     }
     connect( ui->btnSetAsPosition, SIGNAL(clicked()), this, SLOT(SetAsPosition()));
 
-
-    /* video routine */
-    Video* v = new Video();
-    //v->init("/dev/video18");
-    //v->init("/home/caufa/Downloads/build-RoboticArm-Desktop_Qt_5_12_0_GCC_64bit-Debug/video.mp4");
-    connect( ui->btnPlay, SIGNAL(clicked()), v, SLOT(Play()));
-    connect( ui->btnPause, SIGNAL(clicked()), v, SLOT(Pause()));
-
-    this->initCam();
-
     /* others */
     ui->btnSet->setVisible(false);
 
@@ -235,7 +225,6 @@ RoboticArm::RoboticArm(QWidget *parent) :
 void RoboticArm::drawGame(){
     ui->drawWidget->show();
     setButtonsDrawGame(false);
-    cam->setMoving(true);
 }
 
 
@@ -251,23 +240,12 @@ void RoboticArm::reloadTrack(){
     draw->initPitch(this->path);
     draw->showFigureDynamic(drawingGame->num);
     setButtonsDrawGame(true);
-    cam->setMoving(false);
 }
 
 
 void RoboticArm::cancel(){
     ui->drawWidget->hide();
     setButtonsDrawGame(true);
-    cam->setMoving(false);
-}
-
-void RoboticArm::initCam(){
-    /* Camera routine */
-    cam = new Camera();
-    cam->Play();
-    connect(cam,SIGNAL(dice_find(int)),this,SLOT(diceShow(int)));
-    ui->gwCameraGame->setScene(cam->getScene());
-    ui->gwCameraGame_2->setScene(cam->getScene());
 }
 
 
@@ -460,7 +438,6 @@ void RoboticArm::rotarText(int i){
 /* after game start */
 void RoboticArm::gameStart(){
     if(ui->tabWidget->currentIndex() == 2){
-        cam->setMoving(true);
         ui->btnShuffle2->setEnabled(false);
         ui->btnHome->setEnabled(false);
         if(game2->num == 0){
@@ -483,7 +460,6 @@ void RoboticArm::gameStart(){
         ui->btnShuffle2->setText("Waiting...");
     }
     else if(ui->tabWidget->currentIndex() == 3){
-        cam->setMoving(true);
         ui->btnShuffle2_2->setEnabled(false);
         ui->btnHome_2->setEnabled(false);
         ui->btnDrawGame->setEnabled(false);
@@ -511,7 +487,6 @@ void RoboticArm::gameStart(){
 /* after one move of game end */
 void RoboticArm::gameEnd(){
     if(ui->tabWidget->currentIndex() == 2){
-        cam->setMoving(false);
         ui->btnShuffle2->setText("Shuffle");
         if(game2->num != 13){
             if(game2->autoPlay == 0){
@@ -545,7 +520,6 @@ void RoboticArm::gameEnd(){
         }
     }
     else if(ui->tabWidget->currentIndex() == 3){
-        cam->setMoving(false);
         ui->btnShuffle2_2->setText("Shuffle");
         if(drawingGame->num != (drawingGame->pointsCount - 1)){
             if(drawingGame->autoPlay == 0){
