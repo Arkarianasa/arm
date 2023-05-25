@@ -292,7 +292,7 @@ void DrawGame::calculatePoints(QString defaultPath){
                 }
             }
 
-            QTextStream(stdout) << i << ". pozicia: " << c << ", " << alfa << ", "  << z << endl;
+            QTextStream(stdout) << i << ". pozice: " << c << ", " << alfa << ", "  << z << endl;
 
             CalibratingPositions[i].setX(c);
             CalibratingPositions[i].setY(alfa);
@@ -301,5 +301,5 @@ void DrawGame::calculatePoints(QString defaultPath){
         }
     }
 
-    QTextStream(stdout) << "Pocet bodov: " << this->pointsCount << endl;
+    QTextStream(stdout) << "Pocet bodu: " << this->pointsCount << endl;
 }
