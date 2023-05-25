@@ -292,7 +292,7 @@ void DrawGame::calculatePoints(QString defaultPath){
                 }
             }
 
-            QTextStream(stdout) << i << ". pozice: " << c << ", " << alfa << ", "  << z << endl;
+            QTextStream(stdout) << i << ". pole: " << c << ", " << alfa << ", "  << z << endl;
 
             CalibratingPositions[i].setX(c);
             CalibratingPositions[i].setY(alfa);
