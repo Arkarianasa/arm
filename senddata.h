@@ -27,9 +27,9 @@ public:
     int SolveCoordinates(double x, double y, double z, double angle);
     double SolveXYZ(int aServo0, int aServo1, int aServo2, int aServo3, int aServo4, int aServo5);
     QPoint SolveMax(double a);
-    double X,Y,Z,angle,angle2;
+    double X, Y, Z, angle, angle2;
 
-    double baseX,baseY,shoulderX,shoulderY,elbowX,elbowY,wristX,wristY,tipX,tipY;
+    double baseX, baseY, shoulderX, shoulderY, elbowX, elbowY, wristX, wristY, tipX, tipY;
 
 signals:
     void Error(int e);

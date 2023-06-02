@@ -19,6 +19,7 @@ INSTALLS += target
 TEMPLATE = app
 
 SOURCES += main.cpp\
+    arm.cpp \
     roboticarm.cpp \
     senddata.cpp \
     mygraphicsview.cpp \
@@ -28,6 +29,7 @@ SOURCES += main.cpp\
     drawgame.cpp
 
 HEADERS  += \
+    arm.h \
     roboticarm.h \
     senddata.h \
     mygraphicsview.h \

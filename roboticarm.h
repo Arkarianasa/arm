@@ -8,6 +8,7 @@
 #include "game.h"
 #include "game2.h"
 #include "drawgame.h"
+#include "arm.h"
 
 
 namespace Ui {
@@ -25,6 +26,7 @@ public:
     void SortValues(char *lBuffer);
     ~RoboticArm();
     SendData* data;
+    Arm* arm;
     Game* game;
     Game2* game2;
     MyGraphicsView* scene;

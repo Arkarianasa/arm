@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QGraphicsScene>
 #include "senddata.h"
+#include "arm.h"
 #include <QGraphicsSceneMouseEvent>
 #include <QDesktopWidget>
 #include <QRect>
@@ -35,9 +36,13 @@ RoboticArm::RoboticArm(QWidget *parent) :
     }
     ui->cmbSpeed->setCurrentIndex(20);
 
-    /* Data port initialize */
+
+    // Data port initialize
     data = new SendData();
     int lFreshStart = data->Init(mInterface, B115200);
+
+
+    arm = new Arm();
 
     /* Data port initialize */
     /* Graphic render */
@@ -131,6 +136,7 @@ RoboticArm::RoboticArm(QWidget *parent) :
     /* others */
     ui->btnSet->setVisible(false);
 
+
     char* lResponse = data->GetInitResponse();
     QTextStream(stdout) << "Response:" << lResponse<<"; fresh "<< !strcmp(lResponse,"noInit") << endl;
     if(lFreshStart > 0){
@@ -154,40 +160,38 @@ RoboticArm::RoboticArm(QWidget *parent) :
         QTextStream(stdout) << "freshstart" << endl;
         data->setTime(1500);
         data->SetZero();
-        /*QTextStream(stdout) << "Calibrating, please wait." << endl;
-        calibrateArm();
-        QTextStream(stdout) << "Calibration done." << endl;*/
         ui->sldRotar->setValue(90);
     }
+
 
 
     /* when change position, change sliders too */
     connect(scene,SIGNAL(newPos()),this,SLOT(setSld()));
 
     /* set rotation */
-    connect(ui->sldRotar, SIGNAL(valueChanged(int)),data, SLOT(setServo0()));
-    connect(ui->sldRotar, SIGNAL(valueChanged(int)),this, SLOT(rotarText(int)));
-    connect(ui->sldRotar, SIGNAL(valueChanged(int)),data, SLOT(SendAngle(int)));
+    connect(ui->sldRotar, SIGNAL(valueChanged(int)), data, SLOT(setServo0()));
+    connect(ui->sldRotar, SIGNAL(valueChanged(int)), this, SLOT(rotarText(int)));
+    connect(ui->sldRotar, SIGNAL(valueChanged(int)), data, SLOT(SendAngle(int)));
 
     /* set touch of hand */
-    connect(ui->sldHand, SIGNAL(valueChanged(int)),data, SLOT(setServo4()));
-    connect(ui->sldHand, SIGNAL(valueChanged(int)),this, SLOT(handText(int)));
-    connect(ui->sldHand, SIGNAL(valueChanged(int)),data, SLOT(SendAngle(int)));
+    connect(ui->sldHand, SIGNAL(valueChanged(int)), data, SLOT(setServo4()));
+    connect(ui->sldHand, SIGNAL(valueChanged(int)), this, SLOT(handText(int)));
+    connect(ui->sldHand, SIGNAL(valueChanged(int)), data, SLOT(SendAngle(int)));
 
 
     /* set position by Slider */
     ui->sldX->setVisible(false);
     ui->sldZ->setVisible(false);
-    connect(ui->sldX, SIGNAL(valueChanged(int)),data, SLOT(setZ(int)));
-    connect(ui->sldX, SIGNAL(valueChanged(int)),this, SLOT(DrawMove()));
+    connect(ui->sldX, SIGNAL(valueChanged(int)), data, SLOT(setZ(int)));
+    connect(ui->sldX, SIGNAL(valueChanged(int)), this, SLOT(DrawMove()));
 
-    connect(ui->sldZ, SIGNAL(valueChanged(int)),data, SLOT(setX(int)));
-    connect(ui->sldZ, SIGNAL(valueChanged(int)),this, SLOT(DrawMove()));
+    connect(ui->sldZ, SIGNAL(valueChanged(int)), data, SLOT(setX(int)));
+    connect(ui->sldZ, SIGNAL(valueChanged(int)), this, SLOT(DrawMove()));
 
 
     /* set degree of hand */
-    connect(ui->sldHand_2, SIGNAL(valueChanged(int)),data, SLOT(setAngle(int)));
-    connect(ui->sldHand_2, SIGNAL(valueChanged(int)),this, SLOT(setSld()));
+    connect(ui->sldHand_2, SIGNAL(valueChanged(int)), data, SLOT(setAngle(int)));
+    connect(ui->sldHand_2, SIGNAL(valueChanged(int)), this, SLOT(setSld()));
 
     /* Print error */
     connect(data, SIGNAL(Error(int)), this, SLOT(printError(int)));
@@ -197,20 +201,20 @@ RoboticArm::RoboticArm(QWidget *parent) :
 
 
     /* manual control */
-    connect(ui->sldS1, SIGNAL(valueChanged(int)),data, SLOT(setServo0()));
-    connect(ui->sldS1, SIGNAL(valueChanged(int)),data, SLOT(SendAngle(int)));
+    connect(ui->sldS1, SIGNAL(valueChanged(int)), data, SLOT(setServo0()));
+    connect(ui->sldS1, SIGNAL(valueChanged(int)), data, SLOT(SendAngle(int)));
 
-    connect(ui->sldS2, SIGNAL(valueChanged(int)),data, SLOT(setServo1()));
-    connect(ui->sldS2, SIGNAL(valueChanged(int)),data, SLOT(SendAngle(int)));
+    connect(ui->sldS2, SIGNAL(valueChanged(int)), data, SLOT(setServo1()));
+    connect(ui->sldS2, SIGNAL(valueChanged(int)), data, SLOT(SendAngle(int)));
 
-    connect(ui->sldS3, SIGNAL(valueChanged(int)),data, SLOT(setServo2()));
-    connect(ui->sldS3, SIGNAL(valueChanged(int)),data, SLOT(SendAngle(int)));
+    connect(ui->sldS3, SIGNAL(valueChanged(int)), data, SLOT(setServo2()));
+    connect(ui->sldS3, SIGNAL(valueChanged(int)), data, SLOT(SendAngle(int)));
 
-    connect(ui->sldS4, SIGNAL(valueChanged(int)),data, SLOT(setServo3()));
-    connect(ui->sldS4, SIGNAL(valueChanged(int)),data, SLOT(SendAngle(int)));
+    connect(ui->sldS4, SIGNAL(valueChanged(int)), data, SLOT(setServo3()));
+    connect(ui->sldS4, SIGNAL(valueChanged(int)), data, SLOT(SendAngle(int)));
 
-    connect(ui->sldS5, SIGNAL(valueChanged(int)),data, SLOT(setServo4()));
-    connect(ui->sldS5, SIGNAL(valueChanged(int)),data, SLOT(SendAngle(int)));
+    connect(ui->sldS5, SIGNAL(valueChanged(int)), data, SLOT(setServo4()));
+    connect(ui->sldS5, SIGNAL(valueChanged(int)), data, SLOT(SendAngle(int)));
 
     /* Exit application */
     connect( ui->btnClose, SIGNAL(clicked()), qApp, SLOT(quit()));
@@ -259,11 +263,11 @@ void RoboticArm::setButtonsDrawGame(bool value){
 
 
 void RoboticArm::calibrateArm(){
-    data->SolveCoordinates(120,70,100,-90);
+    data->SolveCoordinates(120, 70, 100, -90);
     usleep(1500*1000);
-    data->SolveCoordinates(170,0,30,-90);
+    data->SolveCoordinates(170, 0, 30, -90);
     usleep(1500*1000);
-    data->SolveCoordinates(120,0,100,-90);
+    data->SolveCoordinates(120, 0, 100, -90);
     usleep(1500*1000);
     data->setServo0();
     data->SendAngle(120);
@@ -277,6 +281,8 @@ void RoboticArm::calibrateArm(){
     data->SolveCoordinates(50,0,100,-90);
     usleep(1500*1000);
 }
+
+
 
 void RoboticArm::SetAsPosition(){
     int c = ui->cmbGamePositions->currentIndex();
@@ -333,15 +339,15 @@ void RoboticArm::visualiseBorder(){
 /* Show robotic arm in position */
 void RoboticArm::visualiseArm(){
     scene->DrawPict(this->defaultPath + "/base.png", 33, 28.5, 0,28.5,0);
-    scene->DrawPict(this->defaultPath + "/2.png",data->wristX,data->wristY,data->elbowX,data->elbowY,2);
-    scene->DrawPict(this->defaultPath + "/1.png",data->elbowX,data->elbowY,data->shoulderX,data->shoulderY,1);
-    scene->DrawPict(this->defaultPath + "/3.png",data->tipX,data->tipY,data->wristX,data->wristY,3);
+    scene->DrawPict(this->defaultPath + "/2.png", data->wristX, data->wristY, data->elbowX, data->elbowY, 2);
+    scene->DrawPict(this->defaultPath + "/1.png", data->elbowX, data->elbowY, data->shoulderX, data->shoulderY, 1);
+    scene->DrawPict(this->defaultPath + "/3.png", data->tipX, data->tipY, data->wristX, data->wristY, 3);
 
-    scene->crossX(ui->sldX->value(),ui->sldZ->value());
-    scene->addLineReal(data->baseX,data->baseY,data->shoulderX,data->shoulderY,'b');
-    scene->addLineReal(data->shoulderX,data->shoulderY,data->elbowX,data->elbowY,'b');
-    scene->addLineReal(data->elbowX,data->elbowY,data->wristX,data->wristY,'b');
-    scene->addLineReal(data->wristX,data->wristY,data->tipX,data->tipY,'b');
+    scene->crossX(ui->sldX->value(), ui->sldZ->value());
+    scene->addLineReal(data->baseX, data->baseY, data->shoulderX, data->shoulderY, 'b');
+    scene->addLineReal(data->shoulderX, data->shoulderY, data->elbowX, data->elbowY, 'b');
+    scene->addLineReal(data->elbowX, data->elbowY, data->wristX, data->wristY, 'b');
+    scene->addLineReal(data->wristX, data->wristY, data->tipX, data->tipY, 'b');
 
 }
 
